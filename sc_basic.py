@@ -23,7 +23,7 @@ python imaging library (https://pypi.python.org/pypi/PIL)
 """
 
 import kivy
-kivy.require('1.7.2')
+#kivy.require('1.7.2')
  
 from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout

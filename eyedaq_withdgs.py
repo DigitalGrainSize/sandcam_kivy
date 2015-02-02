@@ -39,7 +39,7 @@ import threading
 
 import time, os, shutil
 from DGS import dgs
-from numpy import genfromtxt
+#from numpy import genfromtxt
  
 def export_to_png(self, filename, *args):
     '''Saves an image of the widget and its children in png format at the
@@ -179,10 +179,11 @@ class CameraWidget(BoxLayout):
         res = 1 # mm/pixel
         doplot = 0 # don't make plots
         
-        dgs('pwd',density,doplot,res,'eyeballimages/processed')
+        mn,srt,sk,krt,pd = dgs('st'+self.txt_inpt.text+'_capture_'+now+'.png',density,doplot,res)
+        
         shutil.move('st'+self.txt_inpt.text+'_capture_'+now+'.png','eyeballimages/processed')
         
-        self.textinput.text += 'Mean Size: '+str(genfromtxt('eyeballimages/processed/'+'dgs_results.csv', delimiter=',', usecols=1)[-1])+'\n'
+        self.textinput.text += 'Mean Size: '+str(mn)+'\n'
         
     def TakePictureSand(self, *args):
         self.export_to_png = export_to_png

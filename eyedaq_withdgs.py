@@ -78,7 +78,7 @@ Builder.load_string('''
     Camera:
         id: camera
         resolution: 399, 299     
-
+             
     BoxLayout:
         id: label
         orientation: 'horizontal'
@@ -128,6 +128,39 @@ Builder.load_string('''
             multiline: False
             focus: True
             on_text_validate: root.change_st()
+
+    BoxLayout:
+        id: label
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: '48dp'
+        Button:
+            text: ' '
+
+        Button:
+            text: ' '
+            
+        Button:
+            text: ' '
+            
+        Button:
+            text: ' '
+            
+        Button:
+            text: ' '
+                     
+        Button:
+            text: ' '
+
+        Button:
+            text: ' '
+                        
+        Button:
+            text: ' '
+                   
+        Button:
+            text: ' '
+
                            
 ''')
 
@@ -168,7 +201,7 @@ class CameraWidget(BoxLayout):
         self.export_to_png(self.ids.camera, filename='st'+self.txt_inpt.text+'_capture_'+now+'.png')
         self.textinput.text += 'Image collected: '+now+'\n'
 
-        density = 50 # process every 10 lines
+        density = 10
         res = 1 # mm/pixel
         doplot = 0 # don't make plots
         

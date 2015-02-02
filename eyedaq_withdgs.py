@@ -34,12 +34,10 @@ from kivy.core.window import WindowBase
 from kivy.core.window import Window
 from kivy.graphics import Canvas, Translate, Fbo, ClearColor, ClearBuffers
 
-from kivy.clock import Clock, mainthread
-import threading
+from kivy.clock import Clock
 
 import time, os, shutil
 from DGS import dgs
-#from numpy import genfromtxt
  
 def export_to_png(self, filename, *args):
     '''Saves an image of the widget and its children in png format at the
@@ -154,11 +152,6 @@ class CameraWidget(BoxLayout):
     textinput = ObjectProperty()
     txt_inpt = ObjectProperty(None)    
         
-    stop = threading.Event()
-    
-    def start_second_thread(self, l_text):
-        threading.Thread(target=self.second_thread, args=(l_text,)).start()
-            
     def Play(self, *args):
         self.ids.camera.play = True
         now = time.asctime() #.replace(' ','_')

@@ -34,29 +34,18 @@ from kivy.core.window import WindowBase
 from kivy.core.window import Window
 from kivy.graphics import Canvas, Translate, Fbo, ClearColor, ClearBuffers
 
-from kivy.clock import Clock
-import time 
+from kivy.clock import Clock, mainthread
+import threading
+
+import time, os, shutil
+from DGS import dgs
+from numpy import genfromtxt
  
 def export_to_png(self, filename, *args):
     '''Saves an image of the widget and its children in png format at the
     specified filename. Works by removing the widget canvas from its
     parent, rendering to an :class:`~kivy.graphics.fbo.Fbo`, and calling
     :meth:`~kivy.graphics.texture.Texture.save`.
-
-    .. note::
-
-        The image includes only this widget and its children. If you want to
-        include widgets elsewhere in the tree, you must call
-        :meth:`~Widget.export_to_png` from their common parent, or use
-        :meth:`~kivy.core.window.Window.screenshot` to capture the whole
-        window.
-
-    .. note::
-
-        The image will be saved in png format, you should include the
-        extension in your filename.
-
-    .. versionadded:: 1.8.1
     '''
  
     if self.parent is not None:
@@ -163,18 +152,13 @@ class CameraWidget(BoxLayout):
     label = ObjectProperty()
     source = StringProperty()
     textinput = ObjectProperty()
-    txt_inpt = ObjectProperty(None)
+    txt_inpt = ObjectProperty(None)    
+        
+    stop = threading.Event()
     
-#    def on_touch_down(self, touch):
-
-#        if self.image.collide_point(*touch.pos):
-#            self.label.text = str(touch.pos)
-
-#    def on_touch_up(self, touch):
-#        self.label.text = 'Hello World'
-#        if self.textinput is not None:
-#            self.textinput.text += ' ... and {}'.format(touch.pos)
-
+    def start_second_thread(self, l_text):
+        threading.Thread(target=self.second_thread, args=(l_text,)).start()
+            
     def Play(self, *args):
         self.ids.camera.play = True
         now = time.asctime() #.replace(' ','_')
@@ -190,36 +174,50 @@ class CameraWidget(BoxLayout):
         now = time.asctime().replace(' ','_').replace(':','_')
         self.export_to_png(self.ids.camera, filename='st'+self.txt_inpt.text+'_capture_'+now+'.png')
         self.textinput.text += 'Image collected: '+now+'\n'
+
+        density = 50 # process every 10 lines
+        res = 1 # mm/pixel
+        doplot = 0 # don't make plots
+        
+        dgs('pwd',density,doplot,res,'eyeballimages/processed')
+        shutil.move('st'+self.txt_inpt.text+'_capture_'+now+'.png','eyeballimages/processed')
+        
+        self.textinput.text += 'Mean Size: '+str(genfromtxt('eyeballimages/processed/'+'dgs_results.csv', delimiter=',', usecols=1)[-1])+'\n'
         
     def TakePictureSand(self, *args):
         self.export_to_png = export_to_png
         now = time.asctime().replace(' ','_').replace(':','_')
         self.export_to_png(self.ids.camera, filename='st'+self.txt_inpt.text+'_sand_'+now+'.png')  
-        self.textinput.text += 'Sand image collected: '+now+'\n'     
+        self.textinput.text += 'Sand image collected: '+now+'\n'  
+        shutil.move('st'+self.txt_inpt.text+'_sand_'+now+'.png','sandimages')   
 
     def TakePictureGravel(self, *args):
         self.export_to_png = export_to_png
         now = time.asctime().replace(' ','_').replace(':','_')
         self.export_to_png(self.ids.camera, filename='st'+self.txt_inpt.text+'_gravel_'+now+'.png')        
         self.textinput.text += 'Gravel image collected: '+now+'\n'      
+        shutil.move('st'+self.txt_inpt.text+'_gravel_'+now+'.png','gravelimages') 
         
     def TakePictureRock(self, *args):
         self.export_to_png = export_to_png
         now = time.asctime().replace(' ','_').replace(':','_')
         self.export_to_png(self.ids.camera, filename='st'+self.txt_inpt.text+'_rock_'+now+'.png') 
         self.textinput.text += 'Rock image collected: '+now+'\n'
+        shutil.move('st'+self.txt_inpt.text+'_rock_'+now+'.png','rockimages') 
         
     def TakePictureSandRock(self, *args):
         self.export_to_png = export_to_png
         now = time.asctime().replace(' ','_').replace(':','_')
         self.export_to_png(self.ids.camera, filename='st'+self.txt_inpt.text+'_sand_rock_'+now+'.png') 
-        self.textinput.text += 'Sand/Rock image collected: '+now+'\n'      
+        self.textinput.text += 'Sand/Rock image collected: '+now+'\n'   
+        shutil.move('st'+self.txt_inpt.text+'_sand_rock_'+now+'.png','sandrockimages')    
         
     def TakePictureSandGravel(self, *args):
         self.export_to_png = export_to_png
         now = time.asctime().replace(' ','_').replace(':','_')
         self.export_to_png(self.ids.camera, filename='st'+self.txt_inpt.text+'_sand_gravel_'+now+'.png') 
-        self.textinput.text += 'Sand/Gravel image collected: '+now+'\n'   
+        self.textinput.text += 'Sand/Gravel image collected: '+now+'\n'
+        shutil.move('st'+self.txt_inpt.text+'_sand_gravel_'+now+'.png','sandgravelimages')    
 
     def change_st(self):
         self.textinput.text += 'Station is '+self.txt_inpt.text+'\n'
@@ -245,6 +243,17 @@ class Eyeball_DAQApp(App):
         return root
 
 if __name__ == '__main__':
+
+    try:
+       os.mkdir('eyeballimages')
+       os.mkdir('eyeballimages/processed')
+       os.mkdir('sandimages')
+       os.mkdir('gravelimages')
+       os.mkdir('rockimages')
+       os.mkdir('sandrockimages')
+       os.mkdir('sandgravelimages')
+    except:
+       pass
     Eyeball_DAQApp().run()
     
     

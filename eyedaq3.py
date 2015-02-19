@@ -39,7 +39,8 @@ from kivy.graphics import Canvas, Translate, Fbo, ClearColor, ClearBuffers
 
 from kivy.clock import Clock
 
-import time, os, shutil
+import time, os
+from shutil import move as mv
 
 import sys
 import textwrap
@@ -133,94 +134,95 @@ def export_to_png(self, filename, *args):
  
     return True 
  
+Builder.load_file('eyedaq.kv')
 
-Builder.load_string('''
-<CameraWidget>:
-    orientation: 'vertical'
-    image: camera
-    label: label
-    txt_inpt: txt_inpt
-        
-    Camera:
-        id: camera
-        resolution: (640, 480)     
-             
-    BoxLayout:
-        id: label
-        orientation: 'horizontal'
-        size_hint_y: None
-        height: '48dp'
-        Button:
-            text: 'Play'
-            on_release: root.Play()
+#Builder.load_string('''
+#<CameraWidget>:
+#    orientation: 'vertical'
+#    image: camera
+#    label: label
+#    txt_inpt: txt_inpt
+#        
+#    Camera:
+#        id: camera
+#        resolution: (640, 480)     
+#             
+#    BoxLayout:
+#        id: label
+#        orientation: 'horizontal'
+#        size_hint_y: None
+#        height: '48dp'
+#        Button:
+#            text: 'Play'
+#            on_release: root.Play()
 
-        TextInput:
-            id: txt_inpt
-            text: 'Station'
-            multiline: False
-            focus: True
-            on_text_validate: root.change_st()
-            
-        Button:
-            text: 'Sand'
-            on_press: root.TakePictureSand()  
-            background_color: (1.0, 1.0, 0.0, 1.0)        
+#        TextInput:
+#            id: txt_inpt
+#            text: 'Station'
+#            multiline: False
+#            focus: True
+#            on_text_validate: root.change_st()
+#            
+#        Button:
+#            text: 'Sand'
+#            on_press: root.TakePictureSand()  
+#            background_color: (1.0, 1.0, 0.0, 1.0)        
 
-        Button:
-            text: 'Rock'
-            on_press: root.TakePictureRock() 
-            background_color: (1.0, 0.0, 0.0, 1.0)  
-                        
-        Button:
-            text: 'Sand/Rock'
-            on_press: root.TakePictureSandRock() 
-            background_color: (0.0, 0.2, 0.2, 1.0) 
-             
-        Button:
-            text: 'Custom'
-            background_color: (0.0, 0.6, 0.9, 1.0) 
-                        
-        Button:
-            text: 'Waypoint'
-            on_press: root.MarkWaypoint()                          
-                        
-    BoxLayout:
-        id: label
-        orientation: 'horizontal'
-        size_hint_y: None
-        height: '48dp'
-        Button:
-            text: 'Pause'
-            on_release: root.Pause()
+#        Button:
+#            text: 'Rock'
+#            on_press: root.TakePictureRock() 
+#            background_color: (1.0, 0.0, 0.0, 1.0)  
+#                        
+#        Button:
+#            text: 'Sand/Rock'
+#            on_press: root.TakePictureSandRock() 
+#            background_color: (0.0, 0.2, 0.2, 1.0) 
+#             
+#        Button:
+#            text: 'Custom'
+#            background_color: (0.0, 0.6, 0.9, 1.0) 
+#                        
+#        Button:
+#            text: 'Waypoint'
+#            on_press: root.MarkWaypoint()                          
+#                        
+#    BoxLayout:
+#        id: label
+#        orientation: 'horizontal'
+#        size_hint_y: None
+#        height: '48dp'
+#        Button:
+#            text: 'Pause'
+#            on_release: root.Pause()
 
-        Button:
-            text: 'Record'
-            on_press: root.TakePicture()  
-            background_color: (0.5, 0.1, 0.25, 1.0) 
-            
-        Button:
-            text: 'Gravel'
-            on_press: root.TakePictureGravel()  
-            background_color: (0.0, 0.0, 1.0, 1.0)
-            
-        Button:
-            text: 'Mud'
-            background_color: (0.0, 1.0, 1.0, 1.0)        
-            
-        Button:
-            text: 'Sand/Gravel'
-            on_press: root.TakePictureSandGravel()
-            background_color: (0.0, 0.6, 0.9, 1.0) 
-                                 
-        Button:
-            text: 'Star Wars'
-            background_color: (0.0, 0.2, 0.2, 1.0) 
-            on_press: root.fortune()  
-            
-        Button:
-            text: 'Timestamp'
-            on_press: root.TakeTimeStamp()                          
-''')
+#        Button:
+#            text: 'Record'
+#            on_press: root.TakePicture()  
+#            background_color: (0.5, 0.1, 0.25, 1.0) 
+#            
+#        Button:
+#            text: 'Gravel'
+#            on_press: root.TakePictureGravel()  
+#            background_color: (0.0, 0.0, 1.0, 1.0)
+#            
+#        Button:
+#            text: 'Mud'
+#            background_color: (0.0, 1.0, 1.0, 1.0)        
+#            
+#        Button:
+#            text: 'Sand/Gravel'
+#            on_press: root.TakePictureSandGravel()
+#            background_color: (0.0, 0.6, 0.9, 1.0) 
+#                                 
+#        Button:
+#            text: 'Star Wars'
+#            background_color: (0.0, 0.2, 0.2, 1.0) 
+#            on_press: root.fortune()  
+#            
+#        Button:
+#            text: 'Timestamp'
+#            on_press: root.TakeTimeStamp()                          
+#''')
 
 class Log(TextInput):
 
@@ -259,51 +261,57 @@ class CameraWidget(BoxLayout):
         now = time.asctime().replace(' ','_').replace(':','_')
         self.export_to_png(self.ids.camera, filename='st'+self.txt_inpt.text+'_capture_'+now+'.png')
         self.textinput.text += 'Image collected: '+now+'\n'
-        shutil.move('st'+self.txt_inpt.text+'_capture_'+now+'.png','eyeballimages') 
+        mv('st'+self.txt_inpt.text+'_capture_'+now+'.png','eyeballimages') 
         
     def TakePictureSand(self, *args):
         self.export_to_png = export_to_png
         now = time.asctime().replace(' ','_').replace(':','_')
         self.export_to_png(self.ids.camera, filename='st'+self.txt_inpt.text+'_sand_'+now+'.png')  
         self.textinput.text += 'Sand image collected: '+now+'\n'  
-        shutil.move('st'+self.txt_inpt.text+'_sand_'+now+'.png','sandimages')   
+        mv('st'+self.txt_inpt.text+'_sand_'+now+'.png','sandimages')   
 
     def TakePictureGravel(self, *args):
         self.export_to_png = export_to_png
         now = time.asctime().replace(' ','_').replace(':','_')
         self.export_to_png(self.ids.camera, filename='st'+self.txt_inpt.text+'_gravel_'+now+'.png')        
         self.textinput.text += 'Gravel image collected: '+now+'\n'      
-        shutil.move('st'+self.txt_inpt.text+'_gravel_'+now+'.png','gravelimages') 
+        mv('st'+self.txt_inpt.text+'_gravel_'+now+'.png','gravelimages') 
         
     def TakePictureRock(self, *args):
         self.export_to_png = export_to_png
         now = time.asctime().replace(' ','_').replace(':','_')
         self.export_to_png(self.ids.camera, filename='st'+self.txt_inpt.text+'_rock_'+now+'.png') 
         self.textinput.text += 'Rock image collected: '+now+'\n'
-        shutil.move('st'+self.txt_inpt.text+'_rock_'+now+'.png','rockimages') 
+        mv('st'+self.txt_inpt.text+'_rock_'+now+'.png','rockimages') 
         
     def TakePictureSandRock(self, *args):
         self.export_to_png = export_to_png
         now = time.asctime().replace(' ','_').replace(':','_')
         self.export_to_png(self.ids.camera, filename='st'+self.txt_inpt.text+'_sand_rock_'+now+'.png') 
         self.textinput.text += 'Sand/Rock image collected: '+now+'\n'   
-        shutil.move('st'+self.txt_inpt.text+'_sand_rock_'+now+'.png','sandrockimages')    
+        mv('st'+self.txt_inpt.text+'_sand_rock_'+now+'.png','sandrockimages')    
         
     def TakePictureSandGravel(self, *args):
         self.export_to_png = export_to_png
         now = time.asctime().replace(' ','_').replace(':','_')
         self.export_to_png(self.ids.camera, filename='st'+self.txt_inpt.text+'_sand_gravel_'+now+'.png') 
         self.textinput.text += 'Sand/Gravel image collected: '+now+'\n'
-        shutil.move('st'+self.txt_inpt.text+'_sand_gravel_'+now+'.png','sandgravelimages')    
+        mv('st'+self.txt_inpt.text+'_sand_gravel_'+now+'.png','sandgravelimages')    
 
     def change_st(self):
         self.textinput.text += 'Station is '+self.txt_inpt.text+'\n'
+
+        # get the last site visited and add 1, write to station file
+        fsite = open('station_start.txt','wb')
+        fsite.write(str(int(self.txt_inpt.text)+1)) 
+        fsite.close()
 
     def TakeTimeStamp(self):
         self.textinput.text += 'Time is '+time.asctime()+'\n'                              
 
     def MarkWaypoint(self):
-        self.textinput.text += 'Mark Waypoint at '+time.asctime()+': 36.0986958,-112.1097129\n'         
+        self.textinput.text += 'Mark Waypoint at '+time.asctime()+': 36.0986958,-112.1097129\n'       
+  
     def fortune(self):
         #print cowsay(fortune.get_random_fortune('fortunes'))  
         try:
@@ -360,7 +368,7 @@ class Eyeball_DAQApp(App):
         #item.add_widget(self.textinput)
         self.item.add_widget(layout)
         root.add_widget(self.item)
-
+        
         Clock.schedule_interval(self._draw_me, .5)
         Clock.schedule_interval(self._update_time, 1)
         
@@ -369,13 +377,26 @@ class Eyeball_DAQApp(App):
     def on_stop(self):
         with open('log_'+time.asctime()+'.txt','wb') as f:
            f.write(self.textinput.text)
-    
+
+        with open('station_start.txt','rb') as f:
+           st=str(f.read()).split('\n')[0]
+        f.close()
+
+        countmax=22; counter=0
+        with open('eyedaq.kv','rb') as oldfile, open('eyedaq_new.kv','wb') as newfile:
+           for line in oldfile:
+              counter += 1
+              if counter==countmax:
+                 newfile.write("            text: '"+st+"'\n")
+              else:
+                 newfile.write(line)
+        mv('eyedaq_new.kv','eyedaq.kv')
+              
 
 if __name__ == '__main__':
 
     try:
        os.mkdir('eyeballimages')
-       os.mkdir('eyeballimages/processed')
        os.mkdir('sandimages')
        os.mkdir('gravelimages')
        os.mkdir('rockimages')

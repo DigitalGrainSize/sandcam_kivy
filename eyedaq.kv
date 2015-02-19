@@ -1,0 +1,85 @@
+<CameraWidget>:
+    orientation: 'vertical'
+    image: camera
+    label: label
+    txt_inpt: txt_inpt
+        
+    Camera:
+        id: camera
+        resolution: (640, 480)     
+             
+    BoxLayout:
+        id: label
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: '48dp'
+        Button:
+            text: 'Play'
+            on_release: root.Play()
+
+        TextInput:
+            id: txt_inpt
+            text: '107'
+            multiline: False
+            focus: True
+            on_text_validate: root.change_st()
+            
+        Button:
+            text: 'Sand'
+            on_press: root.TakePictureSand()  
+            background_color: (1.0, 1.0, 0.0, 1.0)        
+
+        Button:
+            text: 'Rock'
+            on_press: root.TakePictureRock() 
+            background_color: (1.0, 0.0, 0.0, 1.0)  
+                        
+        Button:
+            text: 'Sand/Rock'
+            on_press: root.TakePictureSandRock() 
+            background_color: (0.0, 0.2, 0.2, 1.0) 
+             
+        Button:
+            text: 'Custom'
+            background_color: (0.0, 0.6, 0.9, 1.0) 
+                        
+        Button:
+            text: 'Waypoint'
+            on_press: root.MarkWaypoint()                          
+                        
+    BoxLayout:
+        id: label
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: '48dp'
+        Button:
+            text: 'Pause'
+            on_release: root.Pause()
+
+        Button:
+            text: 'Record'
+            on_press: root.TakePicture()  
+            background_color: (0.5, 0.1, 0.25, 1.0) 
+            
+        Button:
+            text: 'Gravel'
+            on_press: root.TakePictureGravel()  
+            background_color: (0.0, 0.0, 1.0, 1.0)
+            
+        Button:
+            text: 'Mud'
+            background_color: (0.0, 1.0, 1.0, 1.0)        
+            
+        Button:
+            text: 'Sand/Gravel'
+            on_press: root.TakePictureSandGravel()
+            background_color: (0.0, 0.6, 0.9, 1.0) 
+                                 
+        Button:
+            text: 'Star Wars'
+            background_color: (0.0, 0.2, 0.2, 1.0) 
+            on_press: root.fortune()  
+            
+        Button:
+            text: 'Timestamp'
+            on_press: root.TakeTimeStamp()                          

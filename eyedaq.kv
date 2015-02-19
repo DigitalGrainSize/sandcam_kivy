@@ -3,7 +3,7 @@
     image: camera
     label: label
     txt_inpt: txt_inpt
-        
+
     Camera:
         id: camera
         resolution: (640, 480)     
@@ -19,7 +19,7 @@
 
         TextInput:
             id: txt_inpt
-            text: '107'
+            text: '115'
             multiline: False
             focus: True
             on_text_validate: root.change_st()
@@ -40,8 +40,9 @@
             background_color: (0.0, 0.2, 0.2, 1.0) 
              
         Button:
-            text: 'Custom'
-            background_color: (0.0, 0.6, 0.9, 1.0) 
+            text: 'Fortune'
+            background_color: (0.0, 0.2, 0.2, 1.0) 
+            on_press: root.fortune()  
                         
         Button:
             text: 'Waypoint'
@@ -78,7 +79,7 @@
         Button:
             text: 'Star Wars'
             background_color: (0.0, 0.2, 0.2, 1.0) 
-            on_press: root.fortune()  
+            on_press: root.starwars()  
             
         Button:
             text: 'Timestamp'

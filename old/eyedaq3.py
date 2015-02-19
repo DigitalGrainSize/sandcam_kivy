@@ -375,8 +375,10 @@ class Eyeball_DAQApp(App):
         return root
 
     def on_stop(self):
-        with open('log_'+time.asctime()+'.txt','wb') as f:
+        #with open('log_'+time.asctime()+'.txt','wb') as f:
+        with open(os.path.expanduser("~")+os.sep+'log_'+time.asctime().replace(' ','_').replace(':','_')+'.txt','wb') as f:
            f.write(self.textinput.text)
+        f.close()
 
         with open('station_start.txt','rb') as f:
            st=str(f.read()).split('\n')[0]

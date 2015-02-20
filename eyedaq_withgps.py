@@ -64,7 +64,7 @@ except:
    print "pip install fortune"
 
 
-comnum='/dev/ttyUSB0'
+comnum= 'COM7' #'/dev/ttyUSB0'
 
 lat = 0
 long = 0
@@ -515,14 +515,16 @@ class Eyeball_DAQApp(App):
 
     #=========================
     def _draw_me(self, dt):
-        e = self.textinput3.text.split(':')[1].split(',')[0]
-        n = self.textinput3.text.split(':')[2].split(',')[0]
-        self.plot.points.append((float(e),float(n)))
-        self.graph.xmax = 10+max(self.plot.points)[0]
-        self.graph.xmin = min(self.plot.points)[0]-10
-        self.graph.ymax = 10+max(self.plot.points)[1]
-        self.graph.ymin = min(self.plot.points)[1]-10
-
+        try:
+           e = self.textinput3.text.split(':')[1].split(',')[0]
+           n = self.textinput3.text.split(':')[2].split(',')[0]
+           self.plot.points.append((float(e),float(n)))
+           self.graph.xmax = 10+max(self.plot.points)[0]
+           self.graph.xmin = min(self.plot.points)[0]-10
+           self.graph.ymax = 10+max(self.plot.points)[1]
+           self.graph.ymin = min(self.plot.points)[1]-10
+        except:
+           pass
         #xmax = random.randint(10, 100)
         #self.plot.points = [(x, sin(x / 10.)) for x in range(0, xmax)]
         #self.graph.xmax = xmax

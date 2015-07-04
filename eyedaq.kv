@@ -14,34 +14,34 @@
         size_hint_y: None
         height: '48dp'
         Button:
-            text: 'Play'
-            on_release: root.Play()
+            text: 'Station Up'
+            on_release: root.station_up()
 
         TextInput:
             id: txt_inpt
-            text: '117'
+            text: '35'
             multiline: False
-            focus: True
+            focus: False
             on_text_validate: root.change_st()
-            
+ 
         Button:
-            text: 'Sand'
-            on_press: root.TakePictureSand()  
-            background_color: (1.0, 1.0, 0.0, 1.0)        
-
+            text: 'Mud'
+            on_press: root.TakePictureMud() 
+            background_color: (0.5, 0.5, 0.0, 1.0)  
+                  
         Button:
             text: 'Rock'
             on_press: root.TakePictureRock() 
-            background_color: (1.0, 0.0, 0.0, 1.0)  
+            background_color: (1.0, 0.0, 0.5, 0.5)  
                         
         Button:
             text: 'Sand/Rock'
             on_press: root.TakePictureSandRock() 
-            background_color: (0.0, 0.2, 0.2, 1.0) 
+            background_color: (0.5, 0.0, 1.0, 0.5) 
              
         Button:
             text: 'Fortune'
-            background_color: (0.0, 0.2, 0.2, 1.0) 
+            background_color: (0.0, 0.5, 0.5, 1.0) 
             on_press: root.fortune()  
                         
         Button:
@@ -54,31 +54,32 @@
         size_hint_y: None
         height: '48dp'
         Button:
-            text: 'Pause'
-            on_release: root.Pause()
+            text: 'Station Down'
+            on_release: root.station_down()
 
         Button:
-            text: 'Record'
+            text: 'Sand'
             on_press: root.TakePicture()  
             background_color: (0.5, 0.1, 0.25, 1.0) 
             
         Button:
             text: 'Gravel'
             on_press: root.TakePictureGravel()  
-            background_color: (0.0, 0.0, 1.0, 1.0)
+            background_color: (1.0, 1.0, 0.1, 0.5)
             
         Button:
-            text: 'Mud'
-            background_color: (0.0, 1.0, 1.0, 1.0)        
+            text: 'Gravel/Sand'
+            on_press: root.TakePictureGravelSand()
+            background_color: (0.25, 1.0, 0.1, 0.5)        
             
         Button:
             text: 'Sand/Gravel'
             on_press: root.TakePictureSandGravel()
-            background_color: (0.0, 0.6, 0.9, 1.0) 
+            background_color: (0.1, 0.25, 0.5, 1.0) 
                                  
         Button:
             text: 'Star Wars'
-            background_color: (0.0, 0.2, 0.2, 1.0) 
+            background_color: (1.0, 0.5, 0.25, 0.1) 
             on_press: root.starwars()  
             
         Button:

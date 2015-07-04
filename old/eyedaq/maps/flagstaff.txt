@@ -1,0 +1,4 @@
+-111.652328	#top left longitude
+35.226356	#top left latitude
+-111.593492	#bottom right longitude
+35.193294	#bottom right latitude

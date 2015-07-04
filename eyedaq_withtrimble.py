@@ -269,6 +269,15 @@ class CameraWidget(BoxLayout):
         fsite = open('station_start.txt','wb')
         fsite.write(str(int(self.txt_inpt.text)+1)) 
         fsite.close()
+        
+    #=========================
+    def change_st_button(self):
+        self.textinput.text += 'Station is '+self.txt_inpt.text+'\n'
+
+        # get the last site visited and add 1, write to station file
+        fsite = open('station_start.txt','wb')
+        fsite.write(str(int(self.txt_inpt.text)+1)) 
+        fsite.close()        
 
     #=========================
     def TakeTimeStamp(self):

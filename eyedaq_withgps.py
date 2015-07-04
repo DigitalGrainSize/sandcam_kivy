@@ -168,7 +168,39 @@ def export_to_png(self, filename, *args):
     return True 
 
 #=========================
+
+def scan():
+    #scan for available ports. return a list of tuples (num, name)
+    available = []
+    for i in range(256):
+        try:
+            s = serial.Serial(i)
+            available.append( (i, s.name))
+            s.close()   # explicit close 'cause of delayed GC in java
+        except serial.SerialException:
+            pass
+    return available
+
+
+#=========================
 def init_serial(self):
+
+   #if os.name=='nt':
+   #    #opens the serial port based on the COM number you choose
+   #    print "Found Ports:"
+   #    for n,s in scan():
+   #       print "%s" % s
+   #    print " "
+
+   #    #enter your COM port number
+   #    print "COM port # for GPS. Enter # only, then enter"
+   #    temp = raw_input() #waits here for keyboard input
+   #    if temp == 'e':
+   #	   sys.exit()
+   #    comnum = 'COM' + temp #concatenate COM and the port number to define serial port
+   #
+   #else:
+   #    comnum='/dev/ttyUSB0'
 
    try:
      global BAUDRATE
@@ -197,6 +229,8 @@ def get_nmea(self):
        line = self.ser.read(1000) # read 1000 bytes
        parts = line.split('\r\n') # split by line return
 
+       gpgga_parts = []; gpgsa_parts = [];
+       gprmc_parts = []; gpvtg_parts = []; gpgsv_parts = []
        newparts = [] # create new variable which contains cleaned strings
        for k in range(len(parts)):
           if parts[k].startswith('$'): #select if starts with $
@@ -204,8 +238,6 @@ def get_nmea(self):
                 if parts[k].count('$')==1: # select if only contains 1 $
                     newparts.append(parts[k])
 
-       gpgga_parts = []; gpgsa_parts = [];
-       gprmc_parts = []; gpvtg_parts = []; gpgsv_parts = []
        for k in range(len(newparts)):
          if "GPGGA" in newparts[k]:
             gpgga_parts.append(newparts[k])
@@ -547,7 +579,7 @@ class Eyeball_DAQApp(App):
         image.textinput = self.textinput
        
         # read nav station positions
-        with open('nav_stat.txt') as f:
+        with open('nav_stat_gps.txt') as f:
            dump = f.read()
         f.close()
         dump = dump.split('\n')
@@ -577,7 +609,7 @@ class Eyeball_DAQApp(App):
         layout.add_widget(self.textinput2)
         image.textinput2 = self.textinput2
         
-        self.textinput3 = Log(text='\n', size_hint = (0.15, 0.15), markup=True)
+        self.textinput3 = Log(text='\n', size_hint = (0.25, 0.25), markup=True)
         layout.add_widget(self.textinput3)
         image.textinput3 = self.textinput3
 
@@ -588,7 +620,7 @@ class Eyeball_DAQApp(App):
 
         Clock.schedule_interval(self._update_pos, 5)
         Clock.schedule_interval(self._update_time, 1)
-        Clock.schedule_interval(self._draw_me, 6)
+        Clock.schedule_interval(self._draw_me, 10)
 
         root.add_widget(self.item)
         
